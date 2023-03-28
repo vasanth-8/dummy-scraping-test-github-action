@@ -7,8 +7,8 @@ import ssl
 import smtplib
 import logging
 
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 logging.basicConfig(filename='logs.log',level=logging.INFO,format='%(asctime)s - %(message)s')
 
