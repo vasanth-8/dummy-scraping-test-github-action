@@ -1,0 +1,45 @@
+name: run main.py
+
+on:
+  schedule:
+    - cron: '* * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
+      - name: setup python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+          
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: execute py script # run main.py
+        env:
+          SOME_SECRET: ${{ secrets.SOME_SECRET }}
+          SENDER_MAIL: ${{ secrets.SENDER_MAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          RECEIVER1: ${{ secrets.RECEIVER1 }}
+          RECEIVER2: ${{ secrets.RECEIVER2 }}
+        run: python main.py
+          
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
+          
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main 
