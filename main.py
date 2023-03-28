@@ -67,8 +67,8 @@ if response.status_code==200:
             with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
                 smtp.login(sender_email,email_password)
                 smtp.sendmail(sender_email,receiver_email,em.as_string())
-                # with open('length.txt','w') as filew:
-                #     filew.write(str(len(xx)))
+                with open('length.txt','w') as filew:
+                    filew.write(str(len(xx)))
                 logging.info(f"MAIL SENT")
 
         except Exception as e2:
