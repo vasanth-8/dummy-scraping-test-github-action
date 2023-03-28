@@ -34,7 +34,7 @@ except:
 if response.status_code==200:
     soup=bs(response.content,'html.parser')
     x=soup.select('ul[class="cd-accordion cd-accordion--animated margin-top-lg margin-bottom-lg"] li[class="cd-accordion__item cd-accordion__item--has-children"] ul[class="cd-accordion__sub cd-accordion__sub--l1"] li[class="cd-accordion__item cd-accordion__item--has-children"]')
-    xx=[z for z in x if z.find(string=re.compile(r'20\d+ | Convocation'))]
+    xx=[z for z in x if z.find(string=re.compile(r'20\d{2} | Convocation'))]
 
     if len(xx)>length:
         y=xx[-1].text
