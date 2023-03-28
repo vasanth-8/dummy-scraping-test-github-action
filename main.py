@@ -19,8 +19,6 @@ req.headers=headers
 req.verify=cert_path if os.path.exists(cert_path) else False
 
 response=""
-with open('length.txt','r') as filer:
-    length=int(filer.read())
 try:
     url="https://aucoe.annauniv.edu/"
     response=req.get(url+'rank_details_overall.php')
