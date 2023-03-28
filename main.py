@@ -44,6 +44,7 @@ if response.status_code==200:
         for zz in fi:
             if 'ug' in zz['href'].lower():
                 pdfugurl=url+zz['href']
+                break
         file_data = req.get(pdfugurl).content
         file_name = pdfugurl.split('/')[-1]
 
