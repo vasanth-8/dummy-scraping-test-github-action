@@ -34,19 +34,26 @@ except:
 if response.status_code==200:
     soup=bs(response.content,'html.parser')
     x=soup.select('ul[class="cd-accordion cd-accordion--animated margin-top-lg margin-bottom-lg"] li[class="cd-accordion__item cd-accordion__item--has-children"] ul[class="cd-accordion__sub cd-accordion__sub--l1"] li[class="cd-accordion__item cd-accordion__item--has-children"]')
-    xx=[z for z in x if z.find(string=re.compile(r'20\d{2} | Convocation'))]
+    xx=""
+    for z in x[::-1]:
+        if '2022' in z.text:
+            xx=z
+            break
+    
+    stop = open('stop.txt','r').read()
 
-    if len(xx)>length:
-        y=xx[-1].text
+    if xx and not stop:
+        y=xx.text
         yy=re.search(r'20\d{2}',y).group()
-        fi=xx[-1].find_all('a',{'class':'cd-accordion__label cd-accordion__label--icon-img'})
+        fi=xx.find_all('a',{'class':'cd-accordion__label cd-accordion__label--icon-img'})
         pdfugurl=""
         for zz in fi:
             if 'ug' in zz['href'].lower():
                 pdfugurl=url+zz['href']
                 break
-            else:
-                pdfgurl=url+fi[0]['href']
+        else:
+            pdfgurl=url+fi[0]['href']
+            
         file_data = req.get(pdfugurl).content
         file_name = pdfugurl.split('/')[-1]
 
@@ -67,13 +74,12 @@ if response.status_code==200:
             with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
                 smtp.login(sender_email,email_password)
                 smtp.sendmail(sender_email,receiver_email,em.as_string())
-                with open('length.txt','w') as filew:
-                    filew.write(str(len(xx)))
+                with open('stop.txt','w') as filew:
+                    filew.write("stop")
                 logging.info(f"MAIL SENT")
-
         except Exception as e2:
             logging.info(f"error - {e2}")
     else:
-        logging.info("no change detected")
+        logging.info("not found")
 else:
-    logging.info("")
+    logging.info("connection error")
